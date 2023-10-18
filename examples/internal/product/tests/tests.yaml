@@ -1,0 +1,137 @@
+---
+- test_name: Create and update product
+  inputs:
+    # create message
+    - '{"CreateProduct":{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12},"categories":["fashion"],"images":["img1"]}}'
+    # update message
+    - '{"UpdateProduct":{"product_id":"122","sku":"sku2", "ean":"ean1", "brand":"FlyingTiger"}}'
+  dependencies:
+    # file uploader
+    - name: Uploader
+      calls:
+        # we only upload for CreateProduct event
+        - method: UploadFile
+          expect_inputs:
+            - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+            - '{"CreateProduct":{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12},"categories":["fashion"],"images":["img1"]}}'
+    # handling file pointer message
+    - name: Downloader
+    # product repository
+    - name: Repository
+      calls:
+        # enrich: de-duplicate call
+        - method: EntityExists
+          expect_inputs:
+            - 123_sku1|ean1
+          expect_outputs:
+            - false
+        # enrich: patch original #1
+        - method: GetEntity
+          expect_inputs:
+            - 122_sku2|ean1
+          expect_outputs:
+            - '{"product_id": "122","product": "pants","created_at": "12/04/2020","name": "SP1","description": "short pants","short_description": "pants","sku": "sku2","variant_sku": "skuvar1","variant_id": 1,"size_sku": "33","brand": "FitFlop","collection": "col1","variant": "var1","size": "33","size_comment": "thirty three","stock_item_id": 44,"weight": 320,"weight_unit": "gr","country_of_origin": "CH","active": 1,"meta_title": "meta1","meta_description": "meta one","meta_keywords": "pants","cost_price": 22.2,"cost_price_currency": "EUR","ean": "ean1","harm_code": "c2","harm_description": "c two","folder": "folder 1","comment": "for men","categories": ["fashion"],"images": ["img1"]}'
+        # persist: 2 records: 1 from CreateProduct, 1 from UpdateProduct messages
+        - method: SaveEntities
+          expect_inputs:
+            - '{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]}'
+            - '{"product_id":"122","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku2","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FlyingTiger","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","categories":["fashion"],"images":["img1"]}'
+    # store repository
+    - name: Repository
+      calls:
+        # enrich: with sub-entity
+        - method: GetEntity
+          expect_inputs:
+            - '12'
+          expect_outputs:
+            - '{"id": 12,"name": "Adidas","address":"Some Address"}'
+    # message publisher
+    - name: Publisher
+      calls:
+        - method: PublishEvents
+          expect_inputs:
+            # create message
+            - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateProduct","event_category":"product","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJDcmVhdGVQcm9kdWN0Ijp7InByb2R1Y3RfaWQiOiIxMjMiLCJwcm9kdWN0IjoicGFudHMiLCJjcmVhdGVkX2F0IjoiMTIvMDQvMjAyMCIsIm5hbWUiOiJTUDEiLCJkZXNjcmlwdGlvbiI6InNob3J0IHBhbnRzIiwic2hvcnRfZGVzY3JpcHRpb24iOiJwYW50cyIsInNrdSI6InNrdTEiLCJ2YXJpYW50X3NrdSI6InNrdXZhcjEiLCJ2YXJpYW50X2lkIjoxLCJzaXplX3NrdSI6IjMzIiwiYnJhbmQiOiJGaXRGbG9wIiwiY29sbGVjdGlvbiI6ImNvbDEiLCJ2YXJpYW50IjoidmFyMSIsInNpemUiOiIzMyIsInNpemVfY29tbWVudCI6InRoaXJ0eSB0aHJlZSIsInN0b2NrX2l0ZW1faWQiOjQ0LCJ3ZWlnaHQiOjMyMCwid2VpZ2h0X3VuaXQiOiJnciIsImNvdW50cnlfb2Zfb3JpZ2luIjoiQ0giLCJhY3RpdmUiOjEsIm1ldGFfdGl0bGUiOiJtZXRhMSIsIm1ldGFfZGVzY3JpcHRpb24iOiJtZXRhIG9uZSIsIm1ldGFfa2V5d29yZHMiOiJwYW50cyIsImNvc3RfcHJpY2UiOjIyLjIsImNvc3RfcHJpY2VfY3VycmVuY3kiOiJFVVIiLCJlYW4iOiJlYW4xIiwiaGFybV9jb2RlIjoiYzIiLCJoYXJtX2Rlc2NyaXB0aW9uIjoiYyB0d28iLCJmb2xkZXIiOiJmb2xkZXIgMSIsImNvbW1lbnQiOiJmb3IgbWVuIiwic3RvcmUiOnsiaWQiOjEyfSwiY2F0ZWdvcmllcyI6WyJmYXNoaW9uIl0sImltYWdlcyI6WyJpbWcxIl19fQ=="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","product":[{"product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","product_id":"123","sku":"sku1","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]}]}'
+            # update message
+            - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateProduct","event_category":"product","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_2","reference":"ref_2","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJVcGRhdGVQcm9kdWN0Ijp7InByb2R1Y3RfaWQiOiIxMjIiLCJza3UiOiJza3UyIiwgImVhbiI6ImVhbjEiLCAiYnJhbmQiOiJGbHlpbmdUaWdlciJ9fQ=="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","product":[{"product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FlyingTiger","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","product_id":"122","sku":"sku2","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","categories":["fashion"],"images":["img1"]}]}'
+    # republisher
+    - name: Republisher
+    # message acknowledger
+    - name: Acker
+      calls:
+      - method: AckMessages
+        expect_inputs:
+          # create message
+          - '{"id":"msg_1","reference":"ref_1"}'
+          - '{"id":"msg_2","reference":"ref_2"}'
+
+- test_name: File pointer
+  inputs:
+    - '{"filePointer":{"bucket": "bucket1","key": "key1"}}'
+  dependencies:
+    - name: Uploader
+      calls:
+      # we only upload for CreateProduct event
+        - method: UploadFile
+          expect_inputs:
+            - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+            - '{"filePointer":{"bucket": "bucket1","key": "key1"}}'
+        # handling file pointer message
+    - name: Downloader
+      calls:
+      - method: DownloadFileFromBucket
+        expect_inputs:
+          - 'bucket1'
+          - 'key1'
+        expect_outputs:
+          - '[{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12},"categories":["fashion"],"images":["img1"]},{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12},"categories":["fashion"],"images":["img1"]}]'
+    # product repository
+    - name: Repository
+      calls:
+      # enrich: de-duplicate call
+      - method: EntityExists
+        expect_inputs:
+          - 123_sku1|ean1
+        expect_outputs:
+          - false
+     # enrich: de-duplicate call
+      - method: EntityExists
+        expect_inputs:
+          - 123_sku1|ean1
+        expect_outputs:
+          - false
+      # persist: 2 records
+      - method: SaveEntities
+        expect_inputs:
+          - '{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]}'
+          - '{"product_id":"123","product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","sku":"sku1","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]}'
+    # store repository
+    - name: Repository
+      calls:
+      # enrich: with sub-entity
+      - method: GetEntity
+        expect_inputs:
+          - '12'
+        expect_outputs:
+          - '{"id": 12,"name": "Adidas","address":"Some Address"}'
+      - method: GetEntity
+        expect_inputs:
+          - '12'
+        expect_outputs:
+          - '{"id": 12,"name": "Adidas","address":"Some Address"}'
+    # message publisher
+    - name: Publisher
+      calls:
+      - method: PublishEvents
+        expect_inputs:
+          # create message
+          - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateProduct","event_category":"product","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJmaWxlUG9pbnRlciI6eyJidWNrZXQiOiAiYnVja2V0MSIsImtleSI6ICJrZXkxIn19"],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","product":[{"product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","product_id":"123","sku":"sku1","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]},{"product":"pants","created_at":"12/04/2020","name":"SP1","description":"short pants","short_description":"pants","variant_sku":"skuvar1","variant_id":1,"size_sku":"33","brand":"FitFlop","collection":"col1","variant":"var1","size":"33","size_comment":"thirty three","stock_item_id":44,"weight":320,"weight_unit":"gr","country_of_origin":"CH","active":1,"meta_title":"meta1","meta_description":"meta one","meta_keywords":"pants","cost_price":22.2,"cost_price_currency":"EUR","product_id":"123","sku":"sku1","ean":"ean1","harm_code":"c2","harm_description":"c two","folder":"folder 1","comment":"for men","store":{"id":12,"name":"Adidas","address":"Some Address"},"categories":["fashion"],"images":["img1"]}]}'
+    # republisher
+    - name: Republisher
+    # message acknowledger
+    - name: Acker
+      calls:
+      - method: AckMessages
+        expect_inputs:
+          # create message
+          - '{"id":"msg_1","reference":"ref_1"}'

@@ -1,0 +1,58 @@
+---
+- test_name: Create warehousestock with retry publish
+  inputs:
+    # create business event
+    - '{"Company":"wrPSWx","DClocation":"uRrprowH","EAN":"hRlhJ","StockCategoryCode":"JjjfMrBsmO","StockDate":"1959-4-11","AvailableQuantity":"4","OnPOOrderQuantity":"5","InTransitQuantity":"6","TransferQuantity":"1","OnSOQuantity":"8","OnDeliveryQuantity":"10","PackedQuantity":"3","BlockedQuantity":"8","ReservedQuantity":"8","InspectionQuantity":"8","StockLevelInd":"obIzYxzz","PAPQuantity":"7","PAPInTransitQuantity":"9","OpenOnSalesOrderQuantity":"8","Material":"DBVahj","Season":"GyHlZpN","Brand":"HQqxxmeXJ","Size":"YLLCUPN","Width":"YVOJPF","JobDateTimeStamp":"1967-5-8","BatchJobStepName":"MeNpKJRA"}'
+  dependencies:
+    # file uploader
+    - name: Uploader
+      calls:
+        - method: UploadFile
+          expect_inputs:
+            - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+            - '{"Company":"wrPSWx","DClocation":"uRrprowH","EAN":"hRlhJ","StockCategoryCode":"JjjfMrBsmO","StockDate":"1959-4-11","AvailableQuantity":"4","OnPOOrderQuantity":"5","InTransitQuantity":"6","TransferQuantity":"1","OnSOQuantity":"8","OnDeliveryQuantity":"10","PackedQuantity":"3","BlockedQuantity":"8","ReservedQuantity":"8","InspectionQuantity":"8","StockLevelInd":"obIzYxzz","PAPQuantity":"7","PAPInTransitQuantity":"9","OpenOnSalesOrderQuantity":"8","Material":"DBVahj","Season":"GyHlZpN","Brand":"HQqxxmeXJ","Size":"YLLCUPN","Width":"YVOJPF","JobDateTimeStamp":"1967-5-8","BatchJobStepName":"MeNpKJRA"}'
+    # entity persister
+    - name: Repository
+      calls:
+        # enrich: de-duplicate call - record 1
+        - method: EntityExists
+          expect_inputs:
+            - 1959-04-11 00:00:00 +0000 UTC-hRlhJ-wrPSWx-uRrprowH
+          expect_outputs:
+            - false
+        # persist: 1 record
+        - method: SaveEntities
+          expect_inputs:
+            - '{"Company":"wrPSWx","DClocation":"uRrprowH","EAN":"hRlhJ","StockCategoryCode":"JjjfMrBsmO","StockDate":"1959-04-11T00:00:00Z","AvailableQuantity":4,"OnPOOrderQuantity":5,"InTransitQuantity":6,"TransferQuantity":1,"OnSOQuantity":8,"OnDeliveryQuantity":10,"PackedQuantity":3,"BlockedQuantity":8,"ReservedQuantity":8,"InspectionQuantity":8,"StockLevelInd":"obIzYxzz","PAPQuantity":7,"PAPInTransitQuantity":9,"OpenOnSalesOrderQuantity":8,"Material":"DBVahj","Season":"GyHlZpN","Brand":"HQqxxmeXJ","Size":"YLLCUPN","Width":"YVOJPF","JobDateTimeStamp":"1967-05-08T00:00:00Z","BatchJobStepName":"MeNpKJRA","DocType":""}'
+    # event publisher
+    - name: Publisher
+      calls:
+        # error publish
+        - method: PublishEvents
+          expect_inputs:
+            # create message
+            - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateWarehouseStock","event_category":"warehouseStock","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJDb21wYW55Ijoid3JQU1d4IiwiRENsb2NhdGlvbiI6InVScnByb3dIIiwiRUFOIjoiaFJsaEoiLCJTdG9ja0NhdGVnb3J5Q29kZSI6IkpqamZNckJzbU8iLCJTdG9ja0RhdGUiOiIxOTU5LTQtMTEiLCJBdmFpbGFibGVRdWFudGl0eSI6IjQiLCJPblBPT3JkZXJRdWFudGl0eSI6IjUiLCJJblRyYW5zaXRRdWFudGl0eSI6IjYiLCJUcmFuc2ZlclF1YW50aXR5IjoiMSIsIk9uU09RdWFudGl0eSI6IjgiLCJPbkRlbGl2ZXJ5UXVhbnRpdHkiOiIxMCIsIlBhY2tlZFF1YW50aXR5IjoiMyIsIkJsb2NrZWRRdWFudGl0eSI6IjgiLCJSZXNlcnZlZFF1YW50aXR5IjoiOCIsIkluc3BlY3Rpb25RdWFudGl0eSI6IjgiLCJTdG9ja0xldmVsSW5kIjoib2JJell4enoiLCJQQVBRdWFudGl0eSI6IjciLCJQQVBJblRyYW5zaXRRdWFudGl0eSI6IjkiLCJPcGVuT25TYWxlc09yZGVyUXVhbnRpdHkiOiI4IiwiTWF0ZXJpYWwiOiJEQlZhaGoiLCJTZWFzb24iOiJHeUhsWnBOIiwiQnJhbmQiOiJIUXF4eG1lWEoiLCJTaXplIjoiWUxMQ1VQTiIsIldpZHRoIjoiWVZPSlBGIiwiSm9iRGF0ZVRpbWVTdGFtcCI6IjE5NjctNS04IiwiQmF0Y2hKb2JTdGVwTmFtZSI6Ik1lTnBLSlJBIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","warehouseStock":[{"StockDate":"1959-04-11T00:00:00Z","EAN":"hRlhJ","Company":"wrPSWx","DClocation":"uRrprowH","StockCategoryCode":"JjjfMrBsmO","AvailableQuantity":4,"OnPOOrderQuantity":5,"InTransitQuantity":6,"TransferQuantity":1,"OnSOQuantity":8,"OnDeliveryQuantity":10,"PackedQuantity":3,"BlockedQuantity":8,"ReservedQuantity":8,"InspectionQuantity":8,"StockLevelInd":"obIzYxzz","PAPQuantity":7,"PAPInTransitQuantity":9,"OpenOnSalesOrderQuantity":8,"Material":"DBVahj","Season":"GyHlZpN","Brand":"HQqxxmeXJ","Size":"YLLCUPN","Width":"YVOJPF","JobDateTimeStamp":"1967-05-08T00:00:00Z","BatchJobStepName":"MeNpKJRA","DocType":""}]}'
+          expect_error: error publishing
+        # successful after retry
+        - method: PublishEvents
+          expect_inputs:
+            # republished message
+            - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateWarehouseStock","event_category":"warehouseStock","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJDb21wYW55Ijoid3JQU1d4IiwiRENsb2NhdGlvbiI6InVScnByb3dIIiwiRUFOIjoiaFJsaEoiLCJTdG9ja0NhdGVnb3J5Q29kZSI6IkpqamZNckJzbU8iLCJTdG9ja0RhdGUiOiIxOTU5LTQtMTEiLCJBdmFpbGFibGVRdWFudGl0eSI6IjQiLCJPblBPT3JkZXJRdWFudGl0eSI6IjUiLCJJblRyYW5zaXRRdWFudGl0eSI6IjYiLCJUcmFuc2ZlclF1YW50aXR5IjoiMSIsIk9uU09RdWFudGl0eSI6IjgiLCJPbkRlbGl2ZXJ5UXVhbnRpdHkiOiIxMCIsIlBhY2tlZFF1YW50aXR5IjoiMyIsIkJsb2NrZWRRdWFudGl0eSI6IjgiLCJSZXNlcnZlZFF1YW50aXR5IjoiOCIsIkluc3BlY3Rpb25RdWFudGl0eSI6IjgiLCJTdG9ja0xldmVsSW5kIjoib2JJell4enoiLCJQQVBRdWFudGl0eSI6IjciLCJQQVBJblRyYW5zaXRRdWFudGl0eSI6IjkiLCJPcGVuT25TYWxlc09yZGVyUXVhbnRpdHkiOiI4IiwiTWF0ZXJpYWwiOiJEQlZhaGoiLCJTZWFzb24iOiJHeUhsWnBOIiwiQnJhbmQiOiJIUXF4eG1lWEoiLCJTaXplIjoiWUxMQ1VQTiIsIldpZHRoIjoiWVZPSlBGIiwiSm9iRGF0ZVRpbWVTdGFtcCI6IjE5NjctNS04IiwiQmF0Y2hKb2JTdGVwTmFtZSI6Ik1lTnBLSlJBIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","warehouseStock":[{"StockDate":"1959-04-11T00:00:00Z","EAN":"hRlhJ","Company":"wrPSWx","DClocation":"uRrprowH","StockCategoryCode":"JjjfMrBsmO","AvailableQuantity":4,"OnPOOrderQuantity":5,"InTransitQuantity":6,"TransferQuantity":1,"OnSOQuantity":8,"OnDeliveryQuantity":10,"PackedQuantity":3,"BlockedQuantity":8,"ReservedQuantity":8,"InspectionQuantity":8,"StockLevelInd":"obIzYxzz","PAPQuantity":7,"PAPInTransitQuantity":9,"OpenOnSalesOrderQuantity":8,"Material":"DBVahj","Season":"GyHlZpN","Brand":"HQqxxmeXJ","Size":"YLLCUPN","Width":"YVOJPF","JobDateTimeStamp":"1967-05-08T00:00:00Z","BatchJobStepName":"MeNpKJRA","DocType":""}],"is_republish":2}'
+    # republisher
+    - name: Republisher
+      calls:
+          # republish message with retry metadata
+        - method: PublishEvents
+          expect_inputs:
+            - '{"base_warehouse":"Zale144","event":{"event_category":"warehouseStock","event_name":"CreateWarehouseStock","event_occurred_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC","event_received_time":"2021-11-22T03:04:05Z","id":"msg_1","reference":"ref_1"},"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","is_republish":2,"metadata":{"created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","last_update_event_occurred":"2021-11-22T03:04:05Z","last_updated":"2021-11-22T03:04:05Z"},"previous_action":4,"pt":"2021-11-22T03:04:05Z","raw_data_event":["eyJDb21wYW55Ijoid3JQU1d4IiwiRENsb2NhdGlvbiI6InVScnByb3dIIiwiRUFOIjoiaFJsaEoiLCJTdG9ja0NhdGVnb3J5Q29kZSI6IkpqamZNckJzbU8iLCJTdG9ja0RhdGUiOiIxOTU5LTQtMTEiLCJBdmFpbGFibGVRdWFudGl0eSI6IjQiLCJPblBPT3JkZXJRdWFudGl0eSI6IjUiLCJJblRyYW5zaXRRdWFudGl0eSI6IjYiLCJUcmFuc2ZlclF1YW50aXR5IjoiMSIsIk9uU09RdWFudGl0eSI6IjgiLCJPbkRlbGl2ZXJ5UXVhbnRpdHkiOiIxMCIsIlBhY2tlZFF1YW50aXR5IjoiMyIsIkJsb2NrZWRRdWFudGl0eSI6IjgiLCJSZXNlcnZlZFF1YW50aXR5IjoiOCIsIkluc3BlY3Rpb25RdWFudGl0eSI6IjgiLCJTdG9ja0xldmVsSW5kIjoib2JJell4enoiLCJQQVBRdWFudGl0eSI6IjciLCJQQVBJblRyYW5zaXRRdWFudGl0eSI6IjkiLCJPcGVuT25TYWxlc09yZGVyUXVhbnRpdHkiOiI4IiwiTWF0ZXJpYWwiOiJEQlZhaGoiLCJTZWFzb24iOiJHeUhsWnBOIiwiQnJhbmQiOiJIUXF4eG1lWEoiLCJTaXplIjoiWUxMQ1VQTiIsIldpZHRoIjoiWVZPSlBGIiwiSm9iRGF0ZVRpbWVTdGFtcCI6IjE5NjctNS04IiwiQmF0Y2hKb2JTdGVwTmFtZSI6Ik1lTnBLSlJBIn0="],"warehouseStock":[{"AvailableQuantity":4,"BatchJobStepName":"MeNpKJRA","BlockedQuantity":8,"Brand":"HQqxxmeXJ","Company":"wrPSWx","DClocation":"uRrprowH","DocType":"","EAN":"hRlhJ","InTransitQuantity":6,"InspectionQuantity":8,"JobDateTimeStamp":"1967-05-08T00:00:00Z","Material":"DBVahj","OnDeliveryQuantity":10,"OnPOOrderQuantity":5,"OnSOQuantity":8,"OpenOnSalesOrderQuantity":8,"PAPInTransitQuantity":9,"PAPQuantity":7,"PackedQuantity":3,"ReservedQuantity":8,"Season":"GyHlZpN","Size":"YLLCUPN","StockCategoryCode":"JjjfMrBsmO","StockDate":"1959-04-11T00:00:00Z","StockLevelInd":"obIzYxzz","TransferQuantity":1,"Width":"YVOJPF"}]}'
+        # ack original message
+        - method: AckMessages
+          expect_inputs:
+            - '{"id":"msg_1","reference":"ref_1"}'
+    # message acknowledger
+    - name: Acker
+      calls:
+        # ack retried successful message
+        - method: AckMessages
+          expect_inputs:
+            - '{"id":"msg_1","reference":"ref_1"}'

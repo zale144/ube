@@ -1,0 +1,55 @@
+@startuml
+title Example Pipeline Flow
+AWS_SQSQueue_IN -> Pipeline: Send trigger
+activate Pipeline
+
+	Pipeline -> Pipeline: get feed data\ninto entity\nand put into b-event
+	Pipeline -> Action_Uploader: start with b-event
+	activate Action_Uploader
+		Action_Uploader -> Action_Uploader: get entity\nfrom b-event
+		Action_Uploader -> AWS_S3: store entity\non S3
+		activate AWS_S3
+			AWS_S3 -> AWS_S3:  store data
+			AWS_S3 -> Action_Uploader:  return state
+		deactivate AWS_S3
+		Action_Uploader -> Pipeline: return b-event
+	deactivate Action_Uploader
+
+	Pipeline -> Action_Converter: start with b-event
+	activate Action_Converter
+		Action_Converter -> Action_Converter: get entity\nfrom b-event
+		Action_Converter -> Action_Converter: Convert from Feed model\ninto UBE model
+		Action_Converter -> Action_Converter: set entity\nin b-event
+		Action_Converter -> Pipeline: return b-event
+	deactivate Action_Converter
+
+	Pipeline -> Action_Enricher: start with b-event
+	activate Action_Enricher
+		Action_Enricher -> Action_Enricher: get entity\nfrom b-event
+		Action_Enricher -> Action_Enricher: Enrich entity (UBE model)
+		Action_Enricher -> Action_Enricher: set entity\nin b-event
+		Action_Enricher -> Pipeline: return b-event
+	deactivate Action_Enricher
+
+	Pipeline -> Action_Persister: start with b-event
+	activate Action_Persister
+		Action_Persister -> Action_Persister: get entity\nfrom b-event
+		Action_Persister -> AWS_DynamoDB: Store entity (UBE model)
+		activate AWS_DynamoDB
+			AWS_DynamoDB -> AWS_DynamoDB:  store data
+			AWS_DynamoDB -> Action_Persister:  return state
+		deactivate AWS_DynamoDB
+
+		Action_Persister -> Action_Persister: set entity\nin b-event
+		Action_Persister -> Pipeline: return b-event
+	deactivate Action_Persister
+
+	Pipeline -> AWS_SQSQueue_OUT: Publish
+	activate AWS_SQSQueue_OUT
+		AWS_SQSQueue_OUT -> AWS_SQSQueue_OUT: store data
+		AWS_SQSQueue_OUT -> Pipeline: return state
+	deactivate AWS_SQSQueue_OUT
+
+	Pipeline -> AWS_SQSQueue_IN: Send ACK
+deactivate Pipeline
+@enduml

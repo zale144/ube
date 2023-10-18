@@ -1,0 +1,71 @@
+@startuml
+title Example Pipeline Activity Diagram
+
+start
+-> AWS_SQSQueue_IN;
+
+:**Pipeline**;
+note right
+  * get feed data into entity
+  * put into b-event
+end note
+
+-> b-event;
+
+:**Action Uploader**;
+note right
+	* get entity from b-event
+	* store entity (on AWS S3)
+	* return b-event
+end note
+
+-> b-event;
+
+:**Action Converter**;
+note right
+	* get entity from b-event
+	* convert from feed-model into UBE-model
+	* set entity in b-event
+	* return b-event
+end note
+
+-> b-event;
+
+:**Action Enricher**;
+note right
+	* get entity from b-event
+	* enrich entity (UBE-model)
+	* set entity in b-event
+	* return b-event
+end note
+
+-> b-event;
+
+:**Action Persister**;
+note right
+	* get entity from b-event
+	* store entity (UBE-model) into UBE-DB
+	* set entity in b-event
+	* return b-event
+end note
+
+-> b-event;
+
+:**Action Publisher**;
+note right
+	* get entity from b-event
+	* store data (AWS_SQSQueue_OUT)
+	* set entity in b-event
+	* return b-event
+end note
+
+-> b-event;
+
+:**Pipeline**;
+note right
+	* acknowledge message to queue;
+end note
+
+stop
+@enduml
+

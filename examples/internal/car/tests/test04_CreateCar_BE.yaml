@@ -1,0 +1,42 @@
+---
+- test_name: Create car from BE
+  source_uri: retryQueue
+  inputs:
+    # create message
+    - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"id":"msg_1","reference":"ref_1","event_name":"CreateCar","event_category":"car","event_occurred_time":"2021-11-22T03:04:05Z","event_source":"Zale144","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0X2lkIjoxMjMsInByb2R1Y3QiOiJQZXVnZW90IDIwMDhiIiwiY3JlYXRlZF9hdCI6IjEyLzA0LzIwMjEiLCJuYW1lIjoiUGV1Z2VvdCAyMDA4YiIsImRlc2NyaXB0aW9uIjoiUGV1Z2VvdCAyMDA4YiIsInNob3J0X2Rlc2NyaXB0aW9uIjoiUGV1Z2VvdCAyMDA4YiIsInNlcmlhbF9udW1iZXIiOiJQMjAwOGIiLCJicmFuZCI6IlBldWdlb3QiLCJtb2RlbCI6IjIwMDhiIiwiYm9keV90eXBlIjoiU1VWIiwibGVuZ3RoIjoiNDMwMCIsIndpZHRoIjoiMTc3MCIsImhlaWdodCI6IjE1NTAiLCJib290X2NhcGFjaXR5IjoiNDA1IiwiYm9vdF9jYXBhY2l0eV9tYXgiOiI0MzQiLCJtb2RpZmllZE9uIjoiMjAyMS0xMi0xMFQwNTozMDowMC4wMDBaIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"","car":[{"product_id":123,"product":"Peugeot 2008b","created_at":"12/04/2021","name":"Peugeot 2008b","description":"Peugeot 2008b","short_description":"Peugeot 2008b","serial_number":"P2008b","brand":"Peugeot","model":"2008b","body_type":"SUV","length":4300,"width":1770,"height":1550,"boot_capacity":405,"boot_capacity_max":434,"modifiedOn":"2021-12-10T05:30:00Z"}]}'
+  dependencies:
+    # file uploader
+    - name: Uploader
+      calls:
+        # we only upload for CreateProduct event
+        - method: UploadFile
+          expect_inputs:
+            - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+            - '{"product_id":123,"product":"Peugeot 2008b","created_at":"12/04/2021","name":"Peugeot 2008b","description":"Peugeot 2008b","short_description":"Peugeot 2008b","serial_number":"P2008b","brand":"Peugeot","model":"2008b","body_type":"SUV","length":"4300","width":"1770","height":"1550","boot_capacity":"405","boot_capacity_max":"434","modifiedOn":"2021-12-10T05:30:00.000Z"}'
+    # car repository
+    - name: Repository
+      calls:
+        # enrich: de-duplicate call
+        - method: EntityExists
+          expect_inputs:
+            - 123
+          expect_outputs:
+            - false
+        # persist: 3 records: 1 from CreateProduct, 2 from UpdateProduct messages
+        - method: SaveEntities
+          expect_inputs:
+            - '{"product_id":123,"product":"Peugeot 2008b","created_at":"12/04/2021","name":"Peugeot 2008b","description":"Peugeot 2008b","short_description":"Peugeot 2008b","serial_number":"P2008b","brand":"Peugeot","model":"2008b","body_type":"SUV","length":4300,"width":1770,"height":1550,"boot_capacity":405,"boot_capacity_max":434,"modifiedOn":"2021-12-10T05:30:00Z"}'
+    # message publisher
+    - name: Publisher
+      calls:
+        - method: PublishEvents
+          expect_inputs:
+            # create message
+            - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"id":"msg_1","reference":"ref_1","event_name":"CreateCar","event_category":"car","event_occurred_time":"2021-11-22T03:04:05Z","event_source":"Zale144","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22 03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0X2lkIjoxMjMsInByb2R1Y3QiOiJQZXVnZW90IDIwMDhiIiwiY3JlYXRlZF9hdCI6IjEyLzA0LzIwMjEiLCJuYW1lIjoiUGV1Z2VvdCAyMDA4YiIsImRlc2NyaXB0aW9uIjoiUGV1Z2VvdCAyMDA4YiIsInNob3J0X2Rlc2NyaXB0aW9uIjoiUGV1Z2VvdCAyMDA4YiIsInNlcmlhbF9udW1iZXIiOiJQMjAwOGIiLCJicmFuZCI6IlBldWdlb3QiLCJtb2RlbCI6IjIwMDhiIiwiYm9keV90eXBlIjoiU1VWIiwibGVuZ3RoIjoiNDMwMCIsIndpZHRoIjoiMTc3MCIsImhlaWdodCI6IjE1NTAiLCJib290X2NhcGFjaXR5IjoiNDA1IiwiYm9vdF9jYXBhY2l0eV9tYXgiOiI0MzQiLCJtb2RpZmllZE9uIjoiMjAyMS0xMi0xMFQwNTozMDowMC4wMDBaIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"","car":[{"product_id":123,"product":"Peugeot 2008b","created_at":"12/04/2021","name":"Peugeot 2008b","description":"Peugeot 2008b","short_description":"Peugeot 2008b","serial_number":"P2008b","brand":"Peugeot","model":"2008b","body_type":"SUV","length":4300,"width":1770,"height":1550,"boot_capacity":405,"boot_capacity_max":434,"modifiedOn":"2021-12-10T05:30:00Z"}]}'
+    # message acknowledger
+    - name: Acker
+      calls:
+        - method: AckMessages
+          expect_inputs:
+            # create message
+            - '{"id":"msg_1","reference":"ref_1"}'

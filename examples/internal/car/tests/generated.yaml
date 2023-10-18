@@ -1,0 +1,379 @@
+- test_name: 'CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"oXulGwoAf","created_at":"Adtsq","name":"bfRoDjUvl","description":"hZfpqFos","short_description":"vkFcA","product_id":"490","serial_number":"85c3e748-85df-4820-be63-24438d3af422","brand":"Opel","model":"Toyota
+    Tundra 2wd","body_type":"Passenger car heavy","length":"10","width":"9","height":"3","boot_capacity":"7","boot_capacity_max":"3","modifiedOn":"1923-02-23T09:54:02Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"oXulGwoAf","created_at":"Adtsq","name":"bfRoDjUvl","description":"hZfpqFos","short_description":"vkFcA","product_id":"490","serial_number":"85c3e748-85df-4820-be63-24438d3af422","brand":"Opel","model":"Toyota
+        Tundra 2wd","body_type":"Passenger car heavy","length":"10","width":"9","height":"3","boot_capacity":"7","boot_capacity_max":"3","modifiedOn":"1923-02-23T09:54:02Z"}'
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "490"
+      expect_outputs:
+      - false
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":490,"product":"oXulGwoAf","created_at":"Adtsq","name":"bfRoDjUvl","description":"hZfpqFos","short_description":"vkFcA","serial_number":"85c3e748-85df-4820-be63-24438d3af422","brand":"Opel","model":"Toyota
+        Tundra 2wd","body_type":"Passenger car heavy","length":10,"width":9,"height":3,"boot_capacity":7,"boot_capacity_max":3,"modifiedOn":"1923-02-23T09:54:02Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateCar","event_category":"car","event_source":"createQueue","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoib1h1bEd3b0FmIiwiY3JlYXRlZF9hdCI6IkFkdHNxIiwibmFtZSI6ImJmUm9EalV2bCIsImRlc2NyaXB0aW9uIjoiaFpmcHFGb3MiLCJzaG9ydF9kZXNjcmlwdGlvbiI6InZrRmNBIiwicHJvZHVjdF9pZCI6IjQ5MCIsInNlcmlhbF9udW1iZXIiOiI4NWMzZTc0OC04NWRmLTQ4MjAtYmU2My0yNDQzOGQzYWY0MjIiLCJicmFuZCI6Ik9wZWwiLCJtb2RlbCI6IlRveW90YSBUdW5kcmEgMndkIiwiYm9keV90eXBlIjoiUGFzc2VuZ2VyIGNhciBoZWF2eSIsImxlbmd0aCI6IjEwIiwid2lkdGgiOiI5IiwiaGVpZ2h0IjoiMyIsImJvb3RfY2FwYWNpdHkiOiI3IiwiYm9vdF9jYXBhY2l0eV9tYXgiOiIzIiwibW9kaWZpZWRPbiI6IjE5MjMtMDItMjNUMDk6NTQ6MDJaIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":490,"product":"oXulGwoAf","created_at":"Adtsq","name":"bfRoDjUvl","description":"hZfpqFos","short_description":"vkFcA","serial_number":"85c3e748-85df-4820-be63-24438d3af422","brand":"Opel","model":"Toyota
+        Tundra 2wd","body_type":"Passenger car heavy","length":10,"width":9,"height":3,"boot_capacity":7,"boot_capacity_max":3,"modifiedOn":"1923-02-23T09:54:02Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"znSliNMHj","created_at":"furClOGLN","name":"iPxivNDOcM","description":"LaWyZm","short_description":"WCJhuvQJ","product_id":"236","serial_number":"c29d5aa3-a986-48d6-a2eb-69be4140c3be","brand":"Jaguar","model":"Liberty/cherokee
+    2wd","body_type":"Passenger car light","length":"3","width":"7","height":"10","boot_capacity":"6","boot_capacity_max":"9","modifiedOn":"1939-06-21T23:15:43Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "236"
+      expect_outputs:
+      - '{"product_id":1684698569,"product":"MhWX","created_at":"OkoUbWZs","name":"CwYWIijYe","description":"APHjlAr","short_description":"elgj","serial_number":"kRkqIYJjB","brand":"bnNovnrVjW","model":"pRgXIgikLQ","body_type":"Rsotfc","length":927405507130119677,"width":7319669285747042024,"height":-1448776470164622504,"boot_capacity":-93200976210714603,"boot_capacity_max":4255804297774592219,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":236,"product":"znSliNMHj","created_at":"furClOGLN","name":"iPxivNDOcM","description":"LaWyZm","short_description":"WCJhuvQJ","serial_number":"c29d5aa3-a986-48d6-a2eb-69be4140c3be","brand":"Jaguar","model":"Liberty/cherokee
+        2wd","body_type":"Passenger car light","length":3,"width":7,"height":10,"boot_capacity":6,"boot_capacity_max":9,"modifiedOn":"1939-06-21T23:15:43Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateCar","event_category":"car","event_source":"updateQueue","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoiem5TbGlOTUhqIiwiY3JlYXRlZF9hdCI6ImZ1ckNsT0dMTiIsIm5hbWUiOiJpUHhpdk5ET2NNIiwiZGVzY3JpcHRpb24iOiJMYVd5Wm0iLCJzaG9ydF9kZXNjcmlwdGlvbiI6IldDSmh1dlFKIiwicHJvZHVjdF9pZCI6IjIzNiIsInNlcmlhbF9udW1iZXIiOiJjMjlkNWFhMy1hOTg2LTQ4ZDYtYTJlYi02OWJlNDE0MGMzYmUiLCJicmFuZCI6IkphZ3VhciIsIm1vZGVsIjoiTGliZXJ0eS9jaGVyb2tlZSAyd2QiLCJib2R5X3R5cGUiOiJQYXNzZW5nZXIgY2FyIGxpZ2h0IiwibGVuZ3RoIjoiMyIsIndpZHRoIjoiNyIsImhlaWdodCI6IjEwIiwiYm9vdF9jYXBhY2l0eSI6IjYiLCJib290X2NhcGFjaXR5X21heCI6IjkiLCJtb2RpZmllZE9uIjoiMTkzOS0wNi0yMVQyMzoxNTo0M1oifQ=="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":236,"product":"znSliNMHj","created_at":"furClOGLN","name":"iPxivNDOcM","description":"LaWyZm","short_description":"WCJhuvQJ","serial_number":"c29d5aa3-a986-48d6-a2eb-69be4140c3be","brand":"Jaguar","model":"Liberty/cherokee
+        2wd","body_type":"Passenger car light","length":3,"width":7,"height":10,"boot_capacity":6,"boot_capacity_max":9,"modifiedOn":"1939-06-21T23:15:43Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Uploader - UploadFile : CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"iwfqErLY","created_at":"rVQqbEP","name":"ypFtMvFjLH","description":"lQSUIsYP","short_description":"rtWa","product_id":"230","serial_number":"1a4ec402-5ad2-4fcb-bde2-a49a6a0accdd","brand":"Aston
+    Martin","model":"Accord Hybrid","body_type":"Passenger car heavy","length":"1","width":"3","height":"9","boot_capacity":"8","boot_capacity_max":"2","modifiedOn":"1920-10-28T10:46:48Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"iwfqErLY","created_at":"rVQqbEP","name":"ypFtMvFjLH","description":"lQSUIsYP","short_description":"rtWa","product_id":"230","serial_number":"1a4ec402-5ad2-4fcb-bde2-a49a6a0accdd","brand":"Aston
+        Martin","model":"Accord Hybrid","body_type":"Passenger car heavy","length":"1","width":"3","height":"9","boot_capacity":"8","boot_capacity_max":"2","modifiedOn":"1920-10-28T10:46:48Z"}'
+      expect_error: failed to upload
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "230"
+      expect_outputs:
+      - false
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":230,"product":"iwfqErLY","created_at":"rVQqbEP","name":"ypFtMvFjLH","description":"lQSUIsYP","short_description":"rtWa","serial_number":"1a4ec402-5ad2-4fcb-bde2-a49a6a0accdd","brand":"Aston
+        Martin","model":"Accord Hybrid","body_type":"Passenger car heavy","length":1,"width":3,"height":9,"boot_capacity":8,"boot_capacity_max":2,"modifiedOn":"1920-10-28T10:46:48Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateCar","event_category":"car","event_source":"createQueue","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0IjoiaXdmcUVyTFkiLCJjcmVhdGVkX2F0IjoiclZRcWJFUCIsIm5hbWUiOiJ5cEZ0TXZGakxIIiwiZGVzY3JpcHRpb24iOiJsUVNVSXNZUCIsInNob3J0X2Rlc2NyaXB0aW9uIjoicnRXYSIsInByb2R1Y3RfaWQiOiIyMzAiLCJzZXJpYWxfbnVtYmVyIjoiMWE0ZWM0MDItNWFkMi00ZmNiLWJkZTItYTQ5YTZhMGFjY2RkIiwiYnJhbmQiOiJBc3RvbiBNYXJ0aW4iLCJtb2RlbCI6IkFjY29yZCBIeWJyaWQiLCJib2R5X3R5cGUiOiJQYXNzZW5nZXIgY2FyIGhlYXZ5IiwibGVuZ3RoIjoiMSIsIndpZHRoIjoiMyIsImhlaWdodCI6IjkiLCJib290X2NhcGFjaXR5IjoiOCIsImJvb3RfY2FwYWNpdHlfbWF4IjoiMiIsIm1vZGlmaWVkT24iOiIxOTIwLTEwLTI4VDEwOjQ2OjQ4WiJ9"],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":230,"product":"iwfqErLY","created_at":"rVQqbEP","name":"ypFtMvFjLH","description":"lQSUIsYP","short_description":"rtWa","serial_number":"1a4ec402-5ad2-4fcb-bde2-a49a6a0accdd","brand":"Aston
+        Martin","model":"Accord Hybrid","body_type":"Passenger car heavy","length":1,"width":3,"height":9,"boot_capacity":8,"boot_capacity_max":2,"modifiedOn":"1920-10-28T10:46:48Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Uploader - UploadFile : UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"kCOnxG","created_at":"mFOGyheG","name":"bJFYSUe","description":"oDrKPCwLJ","short_description":"rCaHJkVy","product_id":"576","serial_number":"75b0a2fd-46b4-4ae2-9fd8-19d85d20c071","brand":"KIA","model":"C55
+    Amg","body_type":"Van","length":"8","width":"10","height":"9","boot_capacity":"6","boot_capacity_max":"8","modifiedOn":"1936-06-05T10:47:08Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "576"
+      expect_outputs:
+      - '{"product_id":139951275,"product":"mdiwvMnF","created_at":"MEnUPzCy","name":"RfTBLP","description":"qPlmah","short_description":"vVmYs","serial_number":"koeaE","brand":"qFbsyaoLR","model":"glRGGPT","body_type":"fQMT","length":-7772899747724695406,"width":-1576068928780398410,"height":8058256255457288350,"boot_capacity":3304890914390635906,"boot_capacity_max":5805365999226307465,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":576,"product":"kCOnxG","created_at":"mFOGyheG","name":"bJFYSUe","description":"oDrKPCwLJ","short_description":"rCaHJkVy","serial_number":"75b0a2fd-46b4-4ae2-9fd8-19d85d20c071","brand":"KIA","model":"C55
+        Amg","body_type":"Van","length":8,"width":10,"height":9,"boot_capacity":6,"boot_capacity_max":8,"modifiedOn":"1936-06-05T10:47:08Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateCar","event_category":"car","event_source":"updateQueue","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoia0NPbnhHIiwiY3JlYXRlZF9hdCI6Im1GT0d5aGVHIiwibmFtZSI6ImJKRllTVWUiLCJkZXNjcmlwdGlvbiI6Im9EcktQQ3dMSiIsInNob3J0X2Rlc2NyaXB0aW9uIjoickNhSEprVnkiLCJwcm9kdWN0X2lkIjoiNTc2Iiwic2VyaWFsX251bWJlciI6Ijc1YjBhMmZkLTQ2YjQtNGFlMi05ZmQ4LTE5ZDg1ZDIwYzA3MSIsImJyYW5kIjoiS0lBIiwibW9kZWwiOiJDNTUgQW1nIiwiYm9keV90eXBlIjoiVmFuIiwibGVuZ3RoIjoiOCIsIndpZHRoIjoiMTAiLCJoZWlnaHQiOiI5IiwiYm9vdF9jYXBhY2l0eSI6IjYiLCJib290X2NhcGFjaXR5X21heCI6IjgiLCJtb2RpZmllZE9uIjoiMTkzNi0wNi0wNVQxMDo0NzowOFoifQ=="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":576,"product":"kCOnxG","created_at":"mFOGyheG","name":"bJFYSUe","description":"oDrKPCwLJ","short_description":"rCaHJkVy","serial_number":"75b0a2fd-46b4-4ae2-9fd8-19d85d20c071","brand":"KIA","model":"C55
+        Amg","body_type":"Van","length":8,"width":10,"height":9,"boot_capacity":6,"boot_capacity_max":8,"modifiedOn":"1936-06-05T10:47:08Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Repository - EntityExists : CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"qmXfT","created_at":"Lwwp","name":"mEHe","description":"GJUJTdSckX","short_description":"WvVRnifeik","product_id":"272","serial_number":"5a96605e-7a44-46a2-9b7d-103514b57564","brand":"Chevrolet","model":"M35x","body_type":"Passenger
+    car compact","length":"4","width":"4","height":"1","boot_capacity":"6","boot_capacity_max":"5","modifiedOn":"2019-06-20T00:13:07Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"qmXfT","created_at":"Lwwp","name":"mEHe","description":"GJUJTdSckX","short_description":"WvVRnifeik","product_id":"272","serial_number":"5a96605e-7a44-46a2-9b7d-103514b57564","brand":"Chevrolet","model":"M35x","body_type":"Passenger
+        car compact","length":"4","width":"4","height":"1","boot_capacity":"6","boot_capacity_max":"5","modifiedOn":"2019-06-20T00:13:07Z"}'
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "272"
+      expect_outputs:
+      - true
+  - name: Publisher
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Repository - EntityExists : UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"oRbsmvn","created_at":"McigEUyyhm","name":"xOCTa","description":"pCyZlVeE","short_description":"KqfoXMYJtM","product_id":"399","serial_number":"f839134a-7b5e-4902-9b7f-539a3408a80e","brand":"Citroen","model":"Db9
+    Coupe","body_type":"Passenger car compact","length":"6","width":"9","height":"8","boot_capacity":"4","boot_capacity_max":"5","modifiedOn":"2001-12-23T01:34:48Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "399"
+      expect_outputs:
+      - '{"product_id":-129278227,"product":"knSeSE","created_at":"HctraNddV","name":"bGuhsd","description":"LhPFV","short_description":"sJXlGXY","serial_number":"VcJpC","brand":"UsgfHWc","model":"UbCREYM","body_type":"neyGaRFj","length":5069420383112585787,"width":4068705461999907038,"height":1598402888119751228,"boot_capacity":-7917116547845856506,"boot_capacity_max":-5229907315025741716,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":399,"product":"oRbsmvn","created_at":"McigEUyyhm","name":"xOCTa","description":"pCyZlVeE","short_description":"KqfoXMYJtM","serial_number":"f839134a-7b5e-4902-9b7f-539a3408a80e","brand":"Citroen","model":"Db9
+        Coupe","body_type":"Passenger car compact","length":6,"width":9,"height":8,"boot_capacity":4,"boot_capacity_max":5,"modifiedOn":"2001-12-23T01:34:48Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateCar","event_category":"car","event_source":"updateQueue","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoib1Jic212biIsImNyZWF0ZWRfYXQiOiJNY2lnRVV5eWhtIiwibmFtZSI6InhPQ1RhIiwiZGVzY3JpcHRpb24iOiJwQ3labFZlRSIsInNob3J0X2Rlc2NyaXB0aW9uIjoiS3Fmb1hNWUp0TSIsInByb2R1Y3RfaWQiOiIzOTkiLCJzZXJpYWxfbnVtYmVyIjoiZjgzOTEzNGEtN2I1ZS00OTAyLTliN2YtNTM5YTM0MDhhODBlIiwiYnJhbmQiOiJDaXRyb2VuIiwibW9kZWwiOiJEYjkgQ291cGUiLCJib2R5X3R5cGUiOiJQYXNzZW5nZXIgY2FyIGNvbXBhY3QiLCJsZW5ndGgiOiI2Iiwid2lkdGgiOiI5IiwiaGVpZ2h0IjoiOCIsImJvb3RfY2FwYWNpdHkiOiI0IiwiYm9vdF9jYXBhY2l0eV9tYXgiOiI1IiwibW9kaWZpZWRPbiI6IjIwMDEtMTItMjNUMDE6MzQ6NDhaIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":399,"product":"oRbsmvn","created_at":"McigEUyyhm","name":"xOCTa","description":"pCyZlVeE","short_description":"KqfoXMYJtM","serial_number":"f839134a-7b5e-4902-9b7f-539a3408a80e","brand":"Citroen","model":"Db9
+        Coupe","body_type":"Passenger car compact","length":6,"width":9,"height":8,"boot_capacity":4,"boot_capacity_max":5,"modifiedOn":"2001-12-23T01:34:48Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Repository - SaveEntities : CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"GsTZnRFSJ","created_at":"LuKskn","name":"kstjTYw","description":"gvjXbqunGy","short_description":"dletPhRR","product_id":"519","serial_number":"8e9ceacf-07aa-4bee-81f4-ff102dfed503","brand":"Dacia","model":"Trailblazer
+    Awd","body_type":"Passenger car compact","length":"8","width":"3","height":"5","boot_capacity":"3","boot_capacity_max":"4","modifiedOn":"1926-11-18T12:22:57Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"GsTZnRFSJ","created_at":"LuKskn","name":"kstjTYw","description":"gvjXbqunGy","short_description":"dletPhRR","product_id":"519","serial_number":"8e9ceacf-07aa-4bee-81f4-ff102dfed503","brand":"Dacia","model":"Trailblazer
+        Awd","body_type":"Passenger car compact","length":"8","width":"3","height":"5","boot_capacity":"3","boot_capacity_max":"4","modifiedOn":"1926-11-18T12:22:57Z"}'
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "519"
+      expect_outputs:
+      - false
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":519,"product":"GsTZnRFSJ","created_at":"LuKskn","name":"kstjTYw","description":"gvjXbqunGy","short_description":"dletPhRR","serial_number":"8e9ceacf-07aa-4bee-81f4-ff102dfed503","brand":"Dacia","model":"Trailblazer
+        Awd","body_type":"Passenger car compact","length":8,"width":3,"height":5,"boot_capacity":3,"boot_capacity_max":4,"modifiedOn":"1926-11-18T12:22:57Z"}'
+      expect_error: failed to save
+  - name: Publisher
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Repository - SaveEntities : UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"JQefe","created_at":"PGvhRcXlG","name":"QhfyJyXvMn","description":"rYwNJDfDo","short_description":"KmWU","product_id":"984","serial_number":"20ac2e66-5e24-44ae-8095-cfae5ff1d85f","brand":"Seat","model":"
+    X5","body_type":"Passenger car medium","length":"1","width":"3","height":"1","boot_capacity":"6","boot_capacity_max":"3","modifiedOn":"1914-07-18T02:08:08Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "984"
+      expect_outputs:
+      - '{"product_id":-1556230323,"product":"vMqXDKz","created_at":"Lpbj","name":"jjNLeDXHt","description":"xqUIxsvw","short_description":"vYnbsq","serial_number":"QlPzD","brand":"BpxwScqLy","model":"RihbDj","body_type":"SpsYUlgen","length":-7998275403348533955,"width":-4349490496515826498,"height":6076422750469338339,"boot_capacity":8827539922080350819,"boot_capacity_max":3955709993691938199,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":984,"product":"JQefe","created_at":"PGvhRcXlG","name":"QhfyJyXvMn","description":"rYwNJDfDo","short_description":"KmWU","serial_number":"20ac2e66-5e24-44ae-8095-cfae5ff1d85f","brand":"Seat","model":"
+        X5","body_type":"Passenger car medium","length":1,"width":3,"height":1,"boot_capacity":6,"boot_capacity_max":3,"modifiedOn":"1914-07-18T02:08:08Z"}'
+      expect_error: failed to save
+  - name: Publisher
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Publisher - PublishEvents : UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"nOFaKwlzd","created_at":"VzmkOk","name":"xdAMyMt","description":"ZGjwc","short_description":"hshtdmtFJ","product_id":"723","serial_number":"362daaea-ba4b-4a07-88cf-2e8781a1a6b0","brand":"Nissan","model":"Ml500","body_type":"Passenger
+    car heavy","length":"8","width":"9","height":"7","boot_capacity":"9","boot_capacity_max":"10","modifiedOn":"1945-02-07T09:52:42Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "723"
+      expect_outputs:
+      - '{"product_id":-555538843,"product":"PlkwZRL","created_at":"DjmgcBF","name":"ZuhRlsSRu","description":"IwCQUq","short_description":"PqMPq","serial_number":"ixktkEVoh","brand":"YROrh","model":"wcky","body_type":"MdXusJs","length":3495017525832729044,"width":-1599212334093856956,"height":3781997454980609376,"boot_capacity":4039124931993321310,"boot_capacity_max":554250718095920090,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":723,"product":"nOFaKwlzd","created_at":"VzmkOk","name":"xdAMyMt","description":"ZGjwc","short_description":"hshtdmtFJ","serial_number":"362daaea-ba4b-4a07-88cf-2e8781a1a6b0","brand":"Nissan","model":"Ml500","body_type":"Passenger
+        car heavy","length":8,"width":9,"height":7,"boot_capacity":9,"boot_capacity_max":10,"modifiedOn":"1945-02-07T09:52:42Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateCar","event_category":"car","event_source":"updateQueue","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoibk9GYUt3bHpkIiwiY3JlYXRlZF9hdCI6IlZ6bWtPayIsIm5hbWUiOiJ4ZEFNeU10IiwiZGVzY3JpcHRpb24iOiJaR2p3YyIsInNob3J0X2Rlc2NyaXB0aW9uIjoiaHNodGRtdEZKIiwicHJvZHVjdF9pZCI6IjcyMyIsInNlcmlhbF9udW1iZXIiOiIzNjJkYWFlYS1iYTRiLTRhMDctODhjZi0yZTg3ODFhMWE2YjAiLCJicmFuZCI6Ik5pc3NhbiIsIm1vZGVsIjoiTWw1MDAiLCJib2R5X3R5cGUiOiJQYXNzZW5nZXIgY2FyIGhlYXZ5IiwibGVuZ3RoIjoiOCIsIndpZHRoIjoiOSIsImhlaWdodCI6IjciLCJib290X2NhcGFjaXR5IjoiOSIsImJvb3RfY2FwYWNpdHlfbWF4IjoiMTAiLCJtb2RpZmllZE9uIjoiMTk0NS0wMi0wN1QwOTo1Mjo0MloifQ=="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":723,"product":"nOFaKwlzd","created_at":"VzmkOk","name":"xdAMyMt","description":"ZGjwc","short_description":"hshtdmtFJ","serial_number":"362daaea-ba4b-4a07-88cf-2e8781a1a6b0","brand":"Nissan","model":"Ml500","body_type":"Passenger
+        car heavy","length":8,"width":9,"height":7,"boot_capacity":9,"boot_capacity_max":10,"modifiedOn":"1945-02-07T09:52:42Z"}]}'
+      expect_error: failed to publish
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Publisher - PublishEvents : CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"DjNDcDuB","created_at":"dJKG","name":"BuIA","description":"puYHbrWj","short_description":"jnTqDBDD","product_id":"803","serial_number":"8350b8a8-08cc-4dfa-a5d0-e5f7e06eb234","brand":"Fiat","model":"Optima(ms)","body_type":"Passenger
+    car heavy","length":"4","width":"10","height":"5","boot_capacity":"8","boot_capacity_max":"1","modifiedOn":"1947-08-08T20:08:17Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"DjNDcDuB","created_at":"dJKG","name":"BuIA","description":"puYHbrWj","short_description":"jnTqDBDD","product_id":"803","serial_number":"8350b8a8-08cc-4dfa-a5d0-e5f7e06eb234","brand":"Fiat","model":"Optima(ms)","body_type":"Passenger
+        car heavy","length":"4","width":"10","height":"5","boot_capacity":"8","boot_capacity_max":"1","modifiedOn":"1947-08-08T20:08:17Z"}'
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "803"
+      expect_outputs:
+      - false
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":803,"product":"DjNDcDuB","created_at":"dJKG","name":"BuIA","description":"puYHbrWj","short_description":"jnTqDBDD","serial_number":"8350b8a8-08cc-4dfa-a5d0-e5f7e06eb234","brand":"Fiat","model":"Optima(ms)","body_type":"Passenger
+        car heavy","length":4,"width":10,"height":5,"boot_capacity":8,"boot_capacity_max":1,"modifiedOn":"1947-08-08T20:08:17Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateCar","event_category":"car","event_source":"createQueue","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0IjoiRGpORGNEdUIiLCJjcmVhdGVkX2F0IjoiZEpLRyIsIm5hbWUiOiJCdUlBIiwiZGVzY3JpcHRpb24iOiJwdVlIYnJXaiIsInNob3J0X2Rlc2NyaXB0aW9uIjoiam5UcURCREQiLCJwcm9kdWN0X2lkIjoiODAzIiwic2VyaWFsX251bWJlciI6IjgzNTBiOGE4LTA4Y2MtNGRmYS1hNWQwLWU1ZjdlMDZlYjIzNCIsImJyYW5kIjoiRmlhdCIsIm1vZGVsIjoiT3B0aW1hKG1zKSIsImJvZHlfdHlwZSI6IlBhc3NlbmdlciBjYXIgaGVhdnkiLCJsZW5ndGgiOiI0Iiwid2lkdGgiOiIxMCIsImhlaWdodCI6IjUiLCJib290X2NhcGFjaXR5IjoiOCIsImJvb3RfY2FwYWNpdHlfbWF4IjoiMSIsIm1vZGlmaWVkT24iOiIxOTQ3LTA4LTA4VDIwOjA4OjE3WiJ9"],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":803,"product":"DjNDcDuB","created_at":"dJKG","name":"BuIA","description":"puYHbrWj","short_description":"jnTqDBDD","serial_number":"8350b8a8-08cc-4dfa-a5d0-e5f7e06eb234","brand":"Fiat","model":"Optima(ms)","body_type":"Passenger
+        car heavy","length":4,"width":10,"height":5,"boot_capacity":8,"boot_capacity_max":1,"modifiedOn":"1947-08-08T20:08:17Z"}]}'
+      expect_error: failed to publish
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Acker - AckMessages : CreateCar: 1 messages (1 records each)'
+  source_uri: createQueue
+  inputs:
+  - '{"product":"GEiY","created_at":"wsjMW","name":"sjKXwypyHU","description":"gPvDifMvEP","short_description":"ahQbOdiD","product_id":"504","serial_number":"f95d9e28-baa1-4a5a-8cc9-400fa6801716","brand":"Bentley","model":"Toyota
+    Tundra 4wd","body_type":"Passenger car light","length":"8","width":"5","height":"8","boot_capacity":"3","boot_capacity_max":"10","modifiedOn":"1962-03-14T07:01:37Z"}'
+  dependencies:
+  - name: Uploader
+    calls:
+    - method: UploadFile
+      expect_inputs:
+      - 5de1ea04-61c9-4cf8-bdf8-320479e62d31_0
+      - '{"product":"GEiY","created_at":"wsjMW","name":"sjKXwypyHU","description":"gPvDifMvEP","short_description":"ahQbOdiD","product_id":"504","serial_number":"f95d9e28-baa1-4a5a-8cc9-400fa6801716","brand":"Bentley","model":"Toyota
+        Tundra 4wd","body_type":"Passenger car light","length":"8","width":"5","height":"8","boot_capacity":"3","boot_capacity_max":"10","modifiedOn":"1962-03-14T07:01:37Z"}'
+  - name: Repository
+    calls:
+    - method: EntityExists
+      expect_inputs:
+      - "504"
+      expect_outputs:
+      - false
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":504,"product":"GEiY","created_at":"wsjMW","name":"sjKXwypyHU","description":"gPvDifMvEP","short_description":"ahQbOdiD","serial_number":"f95d9e28-baa1-4a5a-8cc9-400fa6801716","brand":"Bentley","model":"Toyota
+        Tundra 4wd","body_type":"Passenger car light","length":8,"width":5,"height":8,"boot_capacity":3,"boot_capacity_max":10,"modifiedOn":"1962-03-14T07:01:37Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"CreateCar","event_category":"car","event_source":"createQueue","id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0IjoiR0VpWSIsImNyZWF0ZWRfYXQiOiJ3c2pNVyIsIm5hbWUiOiJzaktYd3lweUhVIiwiZGVzY3JpcHRpb24iOiJnUHZEaWZNdkVQIiwic2hvcnRfZGVzY3JpcHRpb24iOiJhaFFiT2RpRCIsInByb2R1Y3RfaWQiOiI1MDQiLCJzZXJpYWxfbnVtYmVyIjoiZjk1ZDllMjgtYmFhMS00YTVhLThjYzktNDAwZmE2ODAxNzE2IiwiYnJhbmQiOiJCZW50bGV5IiwibW9kZWwiOiJUb3lvdGEgVHVuZHJhIDR3ZCIsImJvZHlfdHlwZSI6IlBhc3NlbmdlciBjYXIgbGlnaHQiLCJsZW5ndGgiOiI4Iiwid2lkdGgiOiI1IiwiaGVpZ2h0IjoiOCIsImJvb3RfY2FwYWNpdHkiOiIzIiwiYm9vdF9jYXBhY2l0eV9tYXgiOiIxMCIsIm1vZGlmaWVkT24iOiIxOTYyLTAzLTE0VDA3OjAxOjM3WiJ9"],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":504,"product":"GEiY","created_at":"wsjMW","name":"sjKXwypyHU","description":"gPvDifMvEP","short_description":"ahQbOdiD","serial_number":"f95d9e28-baa1-4a5a-8cc9-400fa6801716","brand":"Bentley","model":"Toyota
+        Tundra 4wd","body_type":"Passenger car light","length":8,"width":5,"height":8,"boot_capacity":3,"boot_capacity_max":10,"modifiedOn":"1962-03-14T07:01:37Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
+- test_name: 'Fail Acker - AckMessages : UpdateCar: 1 messages (1 records each)'
+  source_uri: updateQueue
+  inputs:
+  - '{"product":"kuAWthY","created_at":"zjYATFt","name":"SlLwFsZ","description":"ffuMgrTTOQ","short_description":"RXGcb","product_id":"314","serial_number":"7e12a0ca-86f5-4f00-b144-deb8ed290fac","brand":"Cadillac","model":"Highlander
+    Hybrid 4wd","body_type":"Van","length":"2","width":"6","height":"4","boot_capacity":"9","boot_capacity_max":"1","modifiedOn":"1953-03-01T10:08:11Z"}'
+  dependencies:
+  - name: Uploader
+  - name: Repository
+    calls:
+    - method: GetEntity
+      expect_inputs:
+      - "314"
+      expect_outputs:
+      - '{"product_id":2090733954,"product":"DNnb","created_at":"ghuVCztoG","name":"UxiYgoTfTZ","description":"kmpg","short_description":"jqfk","serial_number":"ouXi","brand":"SjAnLZSv","model":"zrPNMvV","body_type":"VTCptZTaZ","length":-4122765882878047387,"width":-7501296388899717859,"height":5137490000544064450,"boot_capacity":3014837687212243090,"boot_capacity_max":5255898068766090870,"modifiedOn":"0001-01-01T00:00:00Z"}'
+    - method: SaveEntities
+      expect_inputs:
+      - '{"product_id":314,"product":"kuAWthY","created_at":"zjYATFt","name":"SlLwFsZ","description":"ffuMgrTTOQ","short_description":"RXGcb","serial_number":"7e12a0ca-86f5-4f00-b144-deb8ed290fac","brand":"Cadillac","model":"Highlander
+        Hybrid 4wd","body_type":"Van","length":2,"width":6,"height":4,"boot_capacity":9,"boot_capacity_max":1,"modifiedOn":"1953-03-01T10:08:11Z"}'
+  - name: Publisher
+    calls:
+    - method: PublishEvents
+      expect_inputs:
+      - '{"id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31","created":"2021-11-22T03:04:05Z","created_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"event":{"event_name":"UpdateCar","event_category":"car","event_source":"updateQueue","metadata":{"last_updated":"2021-11-22T03:04:05Z","last_update_event_occurred":"2021-11-22T03:04:05Z","last_update_event_id":"5de1ea04-61c9-4cf8-bdf8-320479e62d31"},"id":"msg_1","reference":"ref_1","event_occurred_time":"2021-11-22T03:04:05Z","event_received_time":"2021-11-22T03:04:05Z","event_processed_time":"2021-11-22
+        03:04:05 +0000 UTC"},"raw_data_event":["eyJwcm9kdWN0Ijoia3VBV3RoWSIsImNyZWF0ZWRfYXQiOiJ6allBVEZ0IiwibmFtZSI6IlNsTHdGc1oiLCJkZXNjcmlwdGlvbiI6ImZmdU1nclRUT1EiLCJzaG9ydF9kZXNjcmlwdGlvbiI6IlJYR2NiIiwicHJvZHVjdF9pZCI6IjMxNCIsInNlcmlhbF9udW1iZXIiOiI3ZTEyYTBjYS04NmY1LTRmMDAtYjE0NC1kZWI4ZWQyOTBmYWMiLCJicmFuZCI6IkNhZGlsbGFjIiwibW9kZWwiOiJIaWdobGFuZGVyIEh5YnJpZCA0d2QiLCJib2R5X3R5cGUiOiJWYW4iLCJsZW5ndGgiOiIyIiwid2lkdGgiOiI2IiwiaGVpZ2h0IjoiNCIsImJvb3RfY2FwYWNpdHkiOiI5IiwiYm9vdF9jYXBhY2l0eV9tYXgiOiIxIiwibW9kaWZpZWRPbiI6IjE5NTMtMDMtMDFUMTA6MDg6MTFaIn0="],"pt":"2021-11-22T03:04:05Z","base_warehouse":"Zale144","car":[{"product_id":314,"product":"kuAWthY","created_at":"zjYATFt","name":"SlLwFsZ","description":"ffuMgrTTOQ","short_description":"RXGcb","serial_number":"7e12a0ca-86f5-4f00-b144-deb8ed290fac","brand":"Cadillac","model":"Highlander
+        Hybrid 4wd","body_type":"Van","length":2,"width":6,"height":4,"boot_capacity":9,"boot_capacity_max":1,"modifiedOn":"1953-03-01T10:08:11Z"}]}'
+  - name: Acker
+    calls:
+    - method: AckMessages
+      expect_inputs:
+      - '{"id":"msg_1","reference":"ref_1"}'
